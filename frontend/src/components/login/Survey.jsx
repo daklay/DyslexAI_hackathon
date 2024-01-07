@@ -28,6 +28,7 @@ const LoginForm = () => {
         })
         .catch((error) => {
           // handle your error here
+          alert("Network error! Pleqse try again later")
           console.error(error);
         });
     } else {
@@ -87,7 +88,7 @@ const LoginForm = () => {
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                   placeholder="write your age"
-                  min={0}
+                  min={1}
                 />
               </div>
               <button
