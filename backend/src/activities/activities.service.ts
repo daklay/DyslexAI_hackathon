@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // activities.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';

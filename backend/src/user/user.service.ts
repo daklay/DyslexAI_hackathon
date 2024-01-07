@@ -37,7 +37,7 @@ export class userservice {
     const foundUser = await this.userModel.findOne({name});
 
     if (!foundUser) {
-      throw new NotFoundException('User not found.');
+      return null;
     }
 
     return foundUser;
@@ -78,6 +78,20 @@ export class userservice {
     const updatedUser = await existingUser.save();
 
     return updatedUser;
+  }
+ 
+  async createUser(userData: { name: string }): Promise<user> {
+    const newUser = new this.userModel({
+      name: userData.name,
+      age: 0,
+      level: 0,
+      progression: 0,
+      rewards: [],
+    });
+
+    await newUser.save(); // Save the user to the database
+
+    return newUser;
   }
   // async findByName(name: string): Promise<string | null> {
   //   // const user = await this.userModel.findOne({ name }).exec();

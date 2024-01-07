@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // activities.controller.ts
 import { Controller, Get, Post, Param, Body, Put, Delete } from '@nestjs/common';
 import { ActivitiesService } from './activities.service';
