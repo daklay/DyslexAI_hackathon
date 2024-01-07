@@ -38,11 +38,16 @@ export class userController {
     return this.userService.findById(id);
   }
   @Get('name/:name')
-  async getidbyname(
-    @Param('name')
-    name: string,
-  ): Promise<user> {
-    return this.userService.findByname(name);
+  async getidbyname(@Param('name') name: string): Promise<user> {
+    // Find the user by name
+    let user = await this.userService.findByname(name);
+
+    // If user is not found, create a new user
+    if (!user) {
+       user = await this.userService.createUser({ name });
+    }
+
+    return user;
   }
 
   @Put(':id')

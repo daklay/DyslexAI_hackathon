@@ -3,6 +3,7 @@
 export class CreateActivityDto {
     readonly id_user: string;
     readonly id_chapter: string;
+    readonly age: number;
     readonly answers: {
       id: number;
       time: number;

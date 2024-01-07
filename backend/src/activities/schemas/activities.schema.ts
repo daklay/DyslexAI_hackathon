@@ -1,8 +1,9 @@
+/* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({
   timestamps: true,
-  collection: 'activities', 
+  collection: 'activities',
 })
 export class Activity {
   @Prop({ required: true })
@@ -10,6 +11,9 @@ export class Activity {
 
   @Prop({ required: true })
   chapterId: string;
+  
+  @Prop({ required: true })
+    age: number;
 
   @Prop({
     type: [
