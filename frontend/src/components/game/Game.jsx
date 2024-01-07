@@ -1,11 +1,15 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EreaMap from './../images/GameErea.jpg';
-import profil from "./../images/sources/profil-01.png"
+import profil1 from "./../images/sources/profil-01.png";
+import profil2 from "./../images/sources/profil-02-01.png";
+import profil3 from "./../images/sources/profil-023-01.png";
 
 const Game = () => {
-  const words = ['apple', 'banana', 'grapes', 'orange', 'pineapple', 'kiwi', 'peach', 'mango', 'watermelon', 'lemon'];
+  const words = ['CAT', 'CAR', 'GET', 'BOT', 'A7A'];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [incorrectCount, setIncorrectCount] = useState(0);
 
   const [area, setArea] = useState('');
   const [userName, setUserName] = useState('');
@@ -18,19 +22,36 @@ const Game = () => {
     setUserName(user);
   }, []);
 
+  const [timer, setTimer] = useState(null);
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentWordIndex((prevIndex) => {
-        if (prevIndex < words.length - 1) {
-          return prevIndex + 1;
-        } else {
-          clearInterval(timer);
-          return prevIndex;
-        }
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [words.length]);
+    // Clear any previous timers
+    if (timer) {
+      clearInterval(timer);
+    }
+
+    // Set up a new 30-second timer
+    let newTimer = setInterval(() => {
+      const nextIndex = currentWordIndex + 1;
+      if (nextIndex < words.length) {
+        setCurrentWordIndex(nextIndex);
+      } else {
+        // If we've reached the end of words, clear interval
+        clearInterval(newTimer);
+      }
+    }, 30000); // Set timer to 30 seconds
+
+    // Store the timer id for cleanup
+    setTimer(newTimer);
+
+    // Cleanup function to clear timer when component unmounts or timer changes
+    return () => clearInterval(newTimer);
+  }, [words.length, currentWordIndex, timer]);
+
+  // Ensure the timer is cleared if the application no longer needs it
+  useEffect(() => {
+    return () => timer && clearInterval(timer);
+  }, [timer]);
 
   const currentWord = words[currentWordIndex];
   const wordChars = currentWord.split('');
@@ -59,8 +80,49 @@ const Game = () => {
     }
   };
 
+  const [chars, setChars] = useState([]);
+  function handleOnDrag(e, id) {
+    e.dataTransfer.setData("CHAR:", id);
+  }
+
+  function handleOnDrop(e) {
+    let char = e.dataTransfer.getData("CHAR:");
+    setChars((currentChars) => {
+      // Only add more characters if there is room
+      if (currentChars.length < wordChars.length) {
+        const newChars = [...currentChars, char];
+
+        // Check if we reached the last character, and validate the word
+        if (newChars.length === wordChars.length) {
+          validateWordAndAdvance(newChars);
+        }
+
+        return newChars;
+      }
+
+      return currentChars;
+    });
+  }
+
+  function validateWordAndAdvance(newChars) {
+    const isWordCorrect = newChars.join('') === currentWord;
+    if (isWordCorrect) {
+      // Word is correct, advance and reset chars
+      setCurrentWordIndex(currentWordIndex + 1);
+    } else {
+      // Word is incorrect, increment count and advance
+      setIncorrectCount(incorrectCount + 1);
+      setCurrentWordIndex(currentWordIndex + 1);
+    }
+    setChars([]);
+  }
+
+  function handleOnDragOver(e) {
+    e.preventDefault();
+  }
+
+  const currentArea = localStorage.getItem('area');
   const moveToNextArea = () => {
-    const currentArea = localStorage.getItem('area');
     const nextArea = getNextArea(currentArea);
     localStorage.setItem('area', nextArea);
 
@@ -68,7 +130,34 @@ const Game = () => {
       nav('/results'); // Adjust the route based on the project structure
     }
   };
+  useEffect(() => {
+    if (wordChars.length === chars.length) {
+      const isWordCorrect = chars.every((char, index) => char === wordChars[index]);
+      if (isWordCorrect) {
+        alert("Word is correct!");
+      } else {
+        alert("Word is incorrect, please try again!");
+        setChars([]);  // reset the chars, allowing user to drag again
+      }
+    }
+  }, [chars, wordChars]);
 
+  useEffect(() => {
+    // When currentWordIndex changes, check if the game is finished (end of words array)
+    if (currentWordIndex + 1 === words.length) {
+      // Game finished, print correct and incorrect word counts to the console
+      console.log(`Correct words: ${currentWordIndex - incorrectCount}`);
+      console.log(`Incorrect words: ${incorrectCount}`);
+
+      // Save the counts to localStorage
+      localStorage.setItem('correctCount', currentWordIndex - incorrectCount);
+      localStorage.setItem('incorrectCount', incorrectCount);
+
+      // Do any additional end-of-game logic here, such as navigating to a results page
+    }
+  }, [currentWordIndex, incorrectCount, words.length]);
+
+  const correctCount = currentWordIndex - incorrectCount;
   return (
     <div style={{
       backgroundImage: `url(${EreaMap})`,
@@ -80,31 +169,26 @@ const Game = () => {
       alignItems: 'center',
       position: 'relative'
     }}>
-      {currentWordIndex < words.length - 1 &&
-        <>
-          <div className="flex flex-col gap-6 items-end justify-center mx-7" style={{ height: "90vh" }}>
-            <img width="60" src={profil} alt="" onClick={() => setActivePanel(activePanel === 'status' ? '' : 'status')} />
-            <img width="60" src={profil} alt="" onClick={() => setActivePanel(activePanel === 'status' ? '' : 'status')} />
-            <img width="60" src={profil} alt="" />
-            <img width="60" src={profil} alt="" />
-          </div>
-        </>}
-        {activePanel === 'status' &&
+
+
+      <div className='flex items-center justify-center' style={{width:"70%" ,height:"80vh"}}>
+      {activePanel === 'status' &&
         <div style={{
           position: 'absolute',
-          top: '15%',
+          top: '10%',
           left: '50%',
           transform: 'translateX(-50%)',
           width: '60%',
-          height: '75%',
-          padding: '20px',
+          height: '80%',
+          padding: '30px',
           borderRadius: '4px',
-          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          backgroundColor: 'white',
           zIndex: 10
         }}>
-          <p>Name: {userName}</p>
-          <p>Area: {area}</p>
-          <div>Progress Bar</div>
+          <h1 className='text-green-900 text-4xl'>Your informations : </h1>
+          <p className='text-2xl mt-8'>Name: {userName}</p>
+          <p className='text-2xl mt-6'>Area: {area}</p>
+          <div className='text-2xl mt-6'>Progress Bar</div>
         </div>}
       {activePanel === 'hints' &&
         <div style={{
@@ -123,27 +207,106 @@ const Game = () => {
         </div>}
 
       {currentWordIndex < words.length - 1 ?
-        <>
-          <p>Task number {currentWordIndex + 1}: {words[currentWordIndex]}</p>
-          {wordChars.map((char, index) => (
-            <div
-              key={index}
-              style={{
-                margin: '5px',
-                width: '100px',
-                height: '100px',
-                backgroundColor: 'lightgray',
-                borderRadius: '10px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '16px',
-              }}
-            >
-              {char}
+      <div>
+        
+      <div className ="flex justify-center bg-red-300 w-full"
+       style={{
+        backgroundColor: 'white',
+        borderRadius: '15px',
+        padding: '20px',
+        // width: '70%',
+      }}>
+        <h2 style={{
+          color: 'green',
+          fontSize: '26px',
+          textAlign:'center',
+          fontWeight:'bold',
+          fontFamily: 'Comic Sans MS, cursive, sans-serif',
+        }}>
+          {`Task number ${currentWordIndex + 1}: ${words[currentWordIndex]}`}
+        </h2>
+      </div>
+
+      {currentArea === 'A' &&
+  <div className='border mt-6 m'>
+    <div style={{
+      backgroundColor: "rgba(255, 255, 255, 0.5)",
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)', 
+      gap: '10px',
+
+    }} className=' w-96 h-40 text-center'>
+      <div className='border-2' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[2]}`)}>{currentWord[2]}</div>
+      <div className='border-2' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[0]}`)}>{currentWord[0]}</div>
+      <div className='border-2' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[1]}`)}>{currentWord[1]}</div>
+    </div>
+    <div>
+      <div style={{
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '20px', 
+      }} className=' w-96 h-40 text-center' onDrop={handleOnDrop} onDragOver={handleOnDragOver}>
+        {chars.map((char, index) => (
+          <div className=' border-2' key={index}>{char}</div>
+        ))}
+      </div>
+    </div>
+  </div>
+}
+          {currentArea === 'B' &&
+            <div>
+              <div>
+                <div>{currentWord[2]}</div>
+                <div>{currentWord[0]}</div>
+                <div>{currentWord[3]}</div>
+                <div>{currentWord[1]}</div>
+              </div>
+              <div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
             </div>
-          ))}
-        </>
+          }
+          {currentArea === 'C' &&
+            <div>
+              <div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+              <div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+          }
+          {currentArea === 'D' &&
+            <div>
+              <div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+              <div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+          }
+        </div>
         :
         <div style={{
           position: 'absolute',
@@ -162,6 +325,16 @@ const Game = () => {
           <button onClick={moveToNextArea}>Click here to see your results</button>
         </div>
       }
+      </div>
+      {currentWordIndex < words.length - 1 &&
+
+<div>
+  <div className="flex flex-col gap-6 items-end justify-center mx-7" style={{ height: "90vh" }}>
+    <img width="60" src={profil1} alt="" onClick={() => setActivePanel(activePanel === 'status' ? '' : 'status')} />
+    <img width="60" src={profil2} alt="" onClick={() => setActivePanel(activePanel === 'status' ? '' : 'status')} />
+    <img width="60" src={profil3} alt="" onClick={() => setActivePanel(activePanel === 'status' ? '' : 'status')} />
+  </div>
+</div>}
     </div>
   );
 };
