@@ -228,31 +228,34 @@ const Game = () => {
       </div>
 
       {currentArea === 'A' &&
-  <div className='border mt-6 m'>
+  <div className=' mt-6 m'>
+  <div style={{
+    backgroundColor: "rgba(255, 255, 255, 0)",
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)', 
+    gap: '10px',
+    margin: '10px'
+
+  }} className=' w-96 h-40 text-center'>
+    <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[2]}`)}> <span>{currentWord[2]}</span> </div>
+    <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[0]}`)}><span>{currentWord[0]}</span></div>
+    <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[1]}`)}><span>{currentWord[1]}</span></div>
+  </div>
+  <div>
     <div style={{
+      margin:"10px",
+      border:"2px solid green",
       backgroundColor: "rgba(255, 255, 255, 0.5)",
       display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)', 
-      gap: '10px',
-
-    }} className=' w-96 h-40 text-center'>
-     <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[2]}`)}> <span>{currentWord[2]}</span> </div>
-      <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[0]}`)}><span>{currentWord[0]}</span></div>
-      <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[1]}`)}><span>{currentWord[1]}</span></div>
-    </div>
-    <div>
-      <div style={{
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '20px', 
-      }} className=' w-96 h-40 text-center' onDrop={handleOnDrop} onDragOver={handleOnDragOver}>
-        {chars.map((char, index) => (
-          <div className=' border-2' key={index}>{char}</div>
-        ))}
-      </div>
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: '10px', 
+    }} className=' w-96 h-40 text-center' onDrop={handleOnDrop} onDragOver={handleOnDragOver}>
+      {chars.map((char, index) => ( 
+        <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' style={{backgroundColor: "rgba(255, 255, 255, 0.5)"}} key={index}>{char}</div>
+      ))}
     </div>
   </div>
+</div>
 }
           {currentArea === 'B' &&
             <div>
