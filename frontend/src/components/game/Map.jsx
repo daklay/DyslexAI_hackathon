@@ -1,14 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MapImage from "./../images/startinMap2.png";
-// import MapImage from "./../images/startinMap.jpeg";
 import { useSpeechSynthesis } from "react-speech-kit";
+import Lottie from 'react-lottie';
+import animationData from '../../lotties/lotties.json';
 
 function MyComponent() {
   const { speak, voices } = useSpeechSynthesis();
   const nav = useNavigate();
   const [radius, setRadius] = useState(100); // initial circle radius
   const imgRef = useRef(); // reference to the image
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice"
+    }
+  };
+
+  const lottieContainerStyle = {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    pointerEvents: "none", // This line makes sure the Lottie does not interfere with clicks on elements below it
+    background: "none", // Make sure there is no background
+  };
 
   useEffect(() => {
     // Function to update circle radius based on image width
@@ -18,6 +35,7 @@ function MyComponent() {
         setRadius(newRadius);
       }
     };
+    
 
     // Call the function once to set initial size
     updateRadius();
@@ -62,29 +80,70 @@ function MyComponent() {
   };
 
   function handleNavigate(area) {
-    speak({
-      text: `You have choosen the area ${area}, Good luck`,
-      voice: voices[2],
-    });
-    localStorage.setItem("area", area);
-    nav("/game");
+    if (area === "A") {
+      localStorage.setItem("area", area);
+      speak({
+        text: `You have choosen the area ${area}, Good luck`,
+        voice: voices[2],
+      });
+      nav("/game");
+    } else if (area === "B") {
+      const AREA = localStorage.getItem("area");
+      if (AREA === "B") {
+        nav("/game");
+        speak({
+          text: `You have choosen the area ${area}, Good luck`,
+          voice: voices[2],
+        });
+      } else {
+        speak({
+          text: `You have choosen the area ${area}, Good luck`,
+          voice: voices[2],
+        });
+        alert("You have to finish area A first");
+      }
+    } else if (area === "C") {
+      const AREA = localStorage.getItem("area");
+      if (AREA === "C") {
+        nav("/game");
+        speak({
+          text: `You have to finish area ${area} first, Good luck`,
+          voice: voices[2],
+        });
+      } else {
+        speak({
+          text: `You have to finish area ${area} first, Good luck`,
+          voice: voices[2],
+        });
+        alert(`You have to finish area ${area} first, Good luck`);
+      }
+    } else if (area === "D") {
+      const AREA = localStorage.getItem("area");
+      if (AREA === "D") {
+        nav("/game");
+        speak({
+          text: `You have choosen the area ${area}, Good luck`,
+          voice: voices[2],
+        });
+      } else {
+        speak({
+          text: `You have to finish area ${area} first, Good luck`,
+          voice: voices[2],
+        });
+        alert("`You have to finish area ${area} first, Good luck`");
+      }
+    }
   }
 
   return (
     <div style={containerStyle}>
-      {/* <div style={imageContainerStyle}>
-        <img
-          src={MapImage}
-          alt="Map"
-          usemap="#image-map"
-          // style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      <div style={lottieContainerStyle}> {/* Add this wrapper around Lottie with the new styles */}
+        <Lottie
+          options={defaultOptions}
+          height={400}
+          width={400}
         />
-        <svg width="500" height="500">
-          <a href="">
-            <circle cx="50%" cy="50%" r="50" fill="red" />
-          </a>
-        </svg>
-      </div> */}
+      </div>
       <div style={imageContainerStyle}>
         <img
           src={MapImage}
@@ -98,68 +157,32 @@ function MyComponent() {
           }}
         />
         <svg
+          onClick={() => handleNavigate("C")}
           style={{ position: "absolute", width: "100%", height: "100%" }}
           width="500"
           height="500"
         >
-          <a href="">
-            <circle
-              cx="51.5%"
-              cy="40.5%"
-              // r="127"
-              r={radius}
-              fill="red"
-              viewBox="0 0 100 100"
-            />
-          </a>
         </svg>
         <svg
+          onClick={() => handleNavigate("B")}
           style={{ position: "absolute", width: "100%", height: "100%" }}
           width="500"
           height="500"
         >
-          <a href="">
-            <circle
-              cx="29.5%"
-              cy="35.5%"
-              // r="127"
-              r={radius}
-              fill="red"
-              viewBox="0 0 100 100"
-            />
-          </a>
         </svg>
         <svg
+          onClick={() => handleNavigate("D")}
           style={{ position: "absolute", width: "100%", height: "100%" }}
           width="500"
           height="500"
         >
-          <a href="#1">
-            <circle
-              cx="73.5%"
-              cy="17.5%"
-              // r="127"
-              r={radius}
-              fill="red"
-              viewBox="0 0 100 100"
-            />
-          </a>
         </svg>
         <svg
+          onClick={() => handleNavigate("A")}
           style={{ position: "absolute", width: "100%", height: "100%" }}
           width="500"
           height="500"
         >
-          <a href="">
-            <circle
-              cx="45.5%"
-              cy="70.5%"
-              // r="127"
-              r={radius}
-              fill="red"
-              viewBox="0 0 100 100"
-            />
-          </a>
         </svg>
       </div>
 
