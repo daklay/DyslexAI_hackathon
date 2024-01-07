@@ -311,7 +311,7 @@ const Game = () => {
           }
         </div>
         :
-        <div style={{
+        <div className="shadow-lg" style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
@@ -323,9 +323,13 @@ const Game = () => {
           backgroundColor: 'rgba(255, 255, 255, 0.5)',
           zIndex: 10
         }}>
-          <p>Congratulations, {userName}!</p>
-          <p>You have finished your first chapter.</p>
-          <button onClick={moveToNextArea}>Click here to see your results</button>
+         <div className="p-6 rounded-lg  text-center">
+  <p className="text-green-600 font-bold text-lg">Congratulations, <b className='text-red-600'>{userName}</b>!</p>
+  <p className="text-green-800">You have finished your first chapter.</p>
+  <button className="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:shadow-outline" onClick={moveToNextArea}>
+    Click here to see your results
+  </button>
+</div>
         </div>
       }
       </div>
