@@ -162,14 +162,7 @@ function MyComponent() {
           width="500"
           height="500"
         >
-          <circle
-            cx="51.5%"
-            cy="40.5%"
-            // r="127"
-            r={radius}
-            fill="green"
-            viewBox="0 0 100 100"
-          />
+          
         </svg>
         <svg
           onClick={() => handleNavigate("B")}
@@ -177,16 +170,7 @@ function MyComponent() {
           width="500"
           height="500"
         >
-          <a href="">
-            <circle
-              cx="29.5%"
-              cy="35.5%"
-              // r="127"
-              r={radius}
-              fill="blue"
-              viewBox="0 0 100 100"
-            />
-          </a>
+          
         </svg>
         <svg
           onClick={() => handleNavigate("D")}
@@ -194,16 +178,7 @@ function MyComponent() {
           width="500"
           height="500"
         >
-          <a href="#1">
-            <circle
-              cx="73.5%"
-              cy="17.5%"
-              // r="127"
-              r={radius}
-              fill="yellow"
-              viewBox="0 0 100 100"
-            />
-          </a>
+          
         </svg>
         <svg
           onClick={() => handleNavigate("A")}
@@ -211,16 +186,7 @@ function MyComponent() {
           width="500"
           height="500"
         >
-          <a href="">
-            <circle
-              cx="45.5%"
-              cy="70.5%"
-              // r="127"
-              r={radius}
-              fill="red"
-              viewBox="0 0 100 100"
-            />
-          </a>
+          
         </svg>
       </div>
 
