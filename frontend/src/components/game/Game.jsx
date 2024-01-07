@@ -209,7 +209,7 @@ const Game = () => {
       {currentWordIndex < words.length - 1 ?
       <div>
         
-      <div className ="flex justify-center bg-red-300 w-full"
+      <div className ="flex justify-center"
        style={{
         backgroundColor: 'white',
         borderRadius: '15px',
@@ -236,9 +236,9 @@ const Game = () => {
       gap: '10px',
 
     }} className=' w-96 h-40 text-center'>
-      <div className='border-2' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[2]}`)}>{currentWord[2]}</div>
-      <div className='border-2' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[0]}`)}>{currentWord[0]}</div>
-      <div className='border-2' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[1]}`)}>{currentWord[1]}</div>
+     <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[2]}`)}> <span>{currentWord[2]}</span> </div>
+      <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[0]}`)}><span>{currentWord[0]}</span></div>
+      <div className='text-5xl font-bold text-white border-2 flex justify-center items-center' draggable onDragStart={(e) => handleOnDrag(e, `${currentWord[1]}`)}><span>{currentWord[1]}</span></div>
     </div>
     <div>
       <div style={{
@@ -329,7 +329,7 @@ const Game = () => {
       {currentWordIndex < words.length - 1 &&
 
 <div>
-  <div className="flex flex-col gap-6 items-end justify-center mx-7" style={{ height: "90vh" }}>
+<div className="flex flex-col gap-6 items-end justify-center mx-7" style={{ height: "90vh",position:"absolute",top:0,right:0 }}>
     <img width="60" src={profil1} alt="" onClick={() => setActivePanel(activePanel === 'status' ? '' : 'status')} />
     <img width="60" src={profil2} alt="" onClick={() => setActivePanel(activePanel === 'status' ? '' : 'status')} />
     <img width="60" src={profil3} alt="" onClick={() => setActivePanel(activePanel === 'status' ? '' : 'status')} />
