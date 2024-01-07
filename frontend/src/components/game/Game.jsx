@@ -22,7 +22,7 @@ const Game = () => {
     setUserName(user);
   }, []);
 
-  const [timer, setTimer] = useState(null);
+  const [timer, setTimer] = useState(30);
 
   useEffect(() => {
     // Clear any previous timers
